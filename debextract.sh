@@ -1,6 +1,4 @@
-#!/bin/bash -e
-
-DIRNAME=$(dirname "$0")
+#!/bin/bash
 
 #docker volume create --name debexports
 containerID=$(docker run --detach magnetikonline/buildnginx)
