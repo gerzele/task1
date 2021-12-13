@@ -11,6 +11,6 @@ RUN tar -xf PatchManagerPlus.tgz
 
 COPY /debmaker.sh /tmp/build/
 WORKDIR /tmp/build
-RUN chmod u+x debmaker.sh
+RUN chmod +x debmaker.sh
 
 CMD ./debmaker.sh
