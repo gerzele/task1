@@ -4,6 +4,6 @@ DIRNAME=$(dirname "$0")
 
 #docker volume create --name debexports
 containerID=$(docker run --detach magnetikonline/buildnginx)
-docker cp "$containerID:/root/build/nginx-1.14.0/nginx_1.14.0-1_amd64.deb" "$DIRNAME"
+docker cp "$containerID:/debexports" "/Users/german/DevOPS/task1/"
 sleep 1
 docker rm "$containerID"
