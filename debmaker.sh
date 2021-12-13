@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ls -lh / > /debexport/message
+ls -l / > /debexport/message
