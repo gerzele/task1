@@ -1,7 +1,0 @@
-        Package: PatchManagerPlus
-        Version: 1.0 
-        Section: base 
-        Priority: optional 
-        Architecture: amd64 
-        Maintainer: vendor@vendordomain.com
-        Description: Package Manager
