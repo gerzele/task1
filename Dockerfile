@@ -1,7 +1,8 @@
 FROM debian:latest
 VOLUME /debexport
 RUN apt-get update && apt-get upgrade --yes && \
-	apt-get install dpkg-deb --yes checkinstall && \
+	#apt-get install dpkg-dev --yes \
+	apt-get checkinstall && \
 	apt-get clean
 
 #COPY ./sources/PatchManagerPlus.tgz /tmp/build/

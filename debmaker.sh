@@ -6,7 +6,7 @@
 
 #Check if we have working directory available, create deb package folder structure, copy source files
 
-if [[ -d /tmp/build/PatchManagerPlus/]]
+if test -d /tmp/build/PatchManagerPlus/
 then
     cd /tmp/build/PatchManagerPlus/
     mkdir -p /PatchManagerPlus_1.0-1_arm64/DEBIAN/ && mkdir -p /PatchManagerPlus_1.0-1_arm64/DEBIAN/tmp/packageinstaller/
@@ -16,7 +16,7 @@ fi
 #===
 #Create internal scripts and configuration files for deb package
 #===
-if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/control ]]
+if test ! -f /tmp/build/PatchManagerPlus/DEBIAN/control
 then
     cat <<EOF > control
         Package: PatchManagerPlus
@@ -30,7 +30,7 @@ EOF
 fi
 
 #Adding pre\post installation scripts
-if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/preinst ]]
+if test ! -f /tmp/build/PatchManagerPlus/DEBIAN/preinst 
     cat <<EOF > preinst
 #Preinstallation checks here
 #!/bin/bash
@@ -51,7 +51,7 @@ fi
 EOF
 fi
 
-if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/postinst ]]
+if test ! -f /tmp/build/PatchManagerPlus/DEBIAN/postinst
     cat <<EOF > postinst
 #Postinstallation steps here
 set -e
@@ -61,7 +61,7 @@ chmod +x PatchManagerPlus_LinuxAgent.bin
 EOF
 fi
 
-if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/prerm ]]
+if test ! -f /tmp/build/PatchManagerPlus/DEBIAN/prerm 
     cat <<EOF > 
 #Prepare remove
 set -e
@@ -69,7 +69,7 @@ systemctl stop dcservice
 EOF
 fi
 
-if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/postrm ]]
+if test ! -f /tmp/build/PatchManagerPlus/DEBIAN/postrm
     cat <<EOF > 
 #Purge
 if [[ -d /usr/local/pmpagent]] 
@@ -88,5 +88,6 @@ EOF
 fi
 
 #Template to bild the package
+cd /debexport/
 dpkg-deb --build --root-owner-group /tmp/build/PatchManagerPlus/PatchManagerPlus_1.0-1_arm64/
 
