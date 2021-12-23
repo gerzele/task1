@@ -5,18 +5,18 @@
 #ls -l /debexport > /debexport/message2
 
 #Check if we have working directory available, create deb package folder structure, copy source files
-if [[ -d $BasePath=/tmp/build/PatchManagerPlus/ ]]
+
+if [[ -d /tmp/build/PatchManagerPlus/]]
 then
-    cd $BasePath
-    mkdir -p /PatchManagerPlus_1.0-1_arm64/DEBIAN/ && mkdir -p /PatchManagerPlus_1.0-1_arm64/tmp/packageinstaller/
-    cp *.{bin,json} /PatchManagerPlus_1.0-1_arm64/tmp/packageinstaller/
-    cd $DebPackagePath=/tmp/build/PatchManagerPlus/DEBIAN/
+    cd /tmp/build/PatchManagerPlus/
+    mkdir -p /PatchManagerPlus_1.0-1_arm64/DEBIAN/ && mkdir -p /PatchManagerPlus_1.0-1_arm64/DEBIAN/tmp/packageinstaller/
+    cp *.{bin,json} /PatchManagerPlus_1.0-1_arm64/DEBIAN/tmp/packageinstaller/
 fi
 
 #===
 #Create internal scripts and configuration files for deb package
 #===
-if [[ -f $DebPackagePath/control ]]
+if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/control ]]
 then
     cat <<EOF > control
         Package: PatchManagerPlus
@@ -30,30 +30,63 @@ EOF
 fi
 
 #Adding pre\post installation scripts
-if [[ -f $DebPackagePath/preinst ]]
-    cat <<EOF > 
+if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/preinst ]]
+    cat <<EOF > preinst
 #Preinstallation checks here
 #!/bin/bash
 set -e
 
-if systemctl is-active --quiet dcservice
+if [[ -d /usr/local/pmpagent]] 
+then 
+    cd /usr/local/pmpagent
+    chmod +x RemovePMPAgent.sh
+    ./RemovePMPAgent.sh
+elif [[ -f /etc/desktopcentralagent/dcagentsettings.json ]]
 then
-    systemctl stop dcservice
-else   
-    echo 'Nothing to stop'
+    AgentCustomPathData=$(</etc/desktopcentralagent/dcagentsettings.json)
+    cd "$(echo $AgentCustomPathData | awk -F '"' '{print $4}')"
+    chmod +x RemovePMPAgent.sh
+    ./RemovePMPAgent.sh
 fi
 EOF
 fi
 
-if [[ -f $DebPackagePath/postinst ]]
-    cat <<EOF > 
+if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/postinst ]]
+    cat <<EOF > postinst
 #Postinstallation steps here
 set -e
+cd /tmp/packageinstaller/
 chmod +x PatchManagerPlus_LinuxAgent.bin
+./PatchManagerPlus_LinuxAgent.bin
 EOF
 fi
 
+if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/prerm ]]
+    cat <<EOF > 
+#Prepare remove
+set -e
+systemctl stop dcservice
+EOF
+fi
+
+if [[ -f /tmp/build/PatchManagerPlus/DEBIAN/postrm ]]
+    cat <<EOF > 
+#Purge
+if [[ -d /usr/local/pmpagent]] 
+then 
+    cd /usr/local/pmpagent
+    chmod +x RemovePMPAgent.sh
+    ./RemovePMPAgent.sh
+elif [[ -f /etc/desktopcentralagent/dcagentsettings.json ]]
+then
+    AgentCustomPathData=$(</etc/desktopcentralagent/dcagentsettings.json)
+    cd "$(echo $AgentCustomPathData | awk -F '"' '{print $4}')"
+    chmod +x RemovePMPAgent.sh
+    ./RemovePMPAgent.sh
+fi
+EOF
+fi
 
 #Template to bild the package
-#dpkg-deb --build --root-owner-group $BasePath/PatchManagerPlus_1.0-1_arm64
+dpkg-deb --build --root-owner-group /tmp/build/PatchManagerPlus/PatchManagerPlus_1.0-1_arm64/
 
