@@ -1,0 +1,14 @@
+#!/bin/bash
+#Purge
+if test -d /usr/local/pmpagent
+then
+    cd /usr/local/pmpagent
+    chmod +x RemovePMPAgent.sh
+    ./RemovePMPAgent.sh
+elif test -f /etc/desktopcentralagent/dcagentsettings.json
+then
+    AgentCustomPathData=$(</etc/desktopcentralagent/dcagentsettings.json)
+    cd "$(echo $AgentCustomPathData | awk -F '"' '{print $4}')"
+    chmod +x RemovePMPAgent.sh
+    ./RemovePMPAgent.sh
+fi

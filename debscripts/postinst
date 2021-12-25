@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+cd /usr/packageinstaller/
+chmod +x PatchManagerPlus_LinuxAgent.bin
+./PatchManagerPlus_LinuxAgent.bin

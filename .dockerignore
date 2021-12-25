@@ -1,2 +1,4 @@
 *.deb
-debextract.sh
+notes
+startbuild.sh
+cleanup.sh

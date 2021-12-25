@@ -1,3 +1,5 @@
 /*.deb
 /sources
-debextract.sh
+notes
+startbuild.sh
+cleanup.sh
