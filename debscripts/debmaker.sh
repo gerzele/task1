@@ -12,7 +12,7 @@ DEB_FOLDER="PatchManagerPlus_1.0-1_arm64/DEBIAN"
 PACKAGE_FOLDER="PatchManagerPlus_1.0-1_arm64"
 
 WORKING_DIR="/tmp/build/"
-EXPORT_FOLDER="/debexport/"
+EXPORT_FOLDER="/debexport"
 
 cd $WORKING_DIR
 
@@ -51,5 +51,5 @@ fi
 
 #Template to bild the package
 cd $EXPORT_FOLDER
-dpkg-deb --build --root-owner-group $WORKING_DIR/$PACKAGE_FOLDER /$EXPORT_FOLDER
+dpkg-deb --build --root-owner-group $WORKING_DIR/$PACKAGE_FOLDER $EXPORT_FOLDER
 
